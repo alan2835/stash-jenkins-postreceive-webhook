@@ -15,10 +15,12 @@ import com.google.common.collect.Iterables;
  * https://bitbucket.org/atlassian/stash-webhook-plugin/src/a18713fad2959e670e355df64c840b79a806d8ab/src/main/java/com/atlassian/stash/plugin/webook/WebHook.java?at=master
  *
  * @author Michael Irwin (mikesir87)
+ * @author Alan Hamrick (alan2835)
  */
 public class ConcreteBranchEvaluator implements BranchEvaluator {
 
   private static final String REFS_HEADS = "refs/heads/";
+  private static final String REFS_TAGS = "refs/tags/";
 
   /**
    * {@inheritDoc}
@@ -31,7 +33,8 @@ public class ConcreteBranchEvaluator implements BranchEvaluator {
           public boolean apply(RefChange input) {
             // We only care about non-deleted branches
             return input.getType() != RefChangeType.DELETE
-                && input.getRef().getId().startsWith(REFS_HEADS);
+                && (input.getRef().getId().startsWith(REFS_HEADS)
+                  || input.getRef().getId().startsWith(REFS_TAGS));
           }
         }), new Function<RefChange, String>() {
           @Override
